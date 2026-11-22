@@ -1,0 +1,50 @@
+# Backend .dockerignore
+# Exclude everything that shouldn't be in the production image
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+
+# Tests (not needed in production image)
+tests/
+
+# Dev/CI tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Secrets (never bake into image)
+.env
+.env.*
+!.env.example
+
+# AI model caches (too large; use Docker volume instead)
+.cache/
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docs
+*.md

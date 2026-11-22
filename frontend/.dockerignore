@@ -1,0 +1,26 @@
+# Frontend .dockerignore
+# Keep the build context lean
+
+# Dependencies (re-installed inside the image)
+node_modules/
+
+# Previous builds
+dist/
+dist-ssr/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Git
+.git/
+.gitignore
+
+# Docs
+*.md

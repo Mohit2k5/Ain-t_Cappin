@@ -77,3 +77,13 @@ async def root_health_check() -> HealthResponse:
         version=settings.VERSION,
         environment=settings.ENVIRONMENT,
     )
+
+
+@app.get("/", tags=["System"], include_in_schema=False)
+async def root_redirect():
+    """Root endpoint to guarantee 200 OK for standard load balancer/Envoy health checks."""
+    return {
+        "status": "healthy",
+        "service": "aint-cappin-backend",
+        "docs": "/docs",
+    }

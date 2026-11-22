@@ -64,9 +64,11 @@ ENV OPENAI_API_KEY=""
 ENV HF_HOME=/app/.cache/huggingface
 ENV TRANSFORMERS_CACHE=/app/.cache/huggingface
 ENV SENTENCE_TRANSFORMERS_HOME=/app/.cache/sentence_transformers
+ENV HF_HUB_ENABLE_HF_TRANSFER=0
+ENV HF_HUB_OFFLINE=0
 
-# Create cache dir
-RUN mkdir -p /app/.cache/huggingface /app/.cache/sentence_transformers
+# Pre-download SentenceTransformer model during Docker image build so startup is instant & offline-ready
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
 
 # Expose the application port
 EXPOSE 8000
@@ -76,9 +78,9 @@ RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 RUN chown -R appuser:appgroup /app
 USER appuser
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+# Health check (checks /health; also start-period given for slow initializations)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=45s --retries=3 \
+    CMD curl -f http://127.0.0.1:${PORT:-8000}/health || exit 1
 
 # Launch Uvicorn — dynamic port expansion so Northflank / Cloud Run / PaaS $PORT is respected
 CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --log-level info"]

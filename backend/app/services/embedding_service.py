@@ -11,13 +11,15 @@ class EmbeddingService:
         self.model_name = model_name
         self.dimension = dimension
         self.model = None
-        self._initialize_model()
+        self._model_initialized = False
 
-    def _initialize_model(self):
-        """Attempts to load SentenceTransformer model or falls back gracefully."""
+    def _ensure_model(self):
+        """Lazy loads SentenceTransformer on first inference call so container startup is instantaneous."""
+        if self._model_initialized:
+            return
+        self._model_initialized = True
         try:
             from sentence_transformers import SentenceTransformer
-            # Set a fast local load or initialize
             self.model = SentenceTransformer(self.model_name)
             logger.info("SentenceTransformer '%s' loaded successfully.", self.model_name)
         except Exception as e:
@@ -62,6 +64,7 @@ class EmbeddingService:
         if not texts:
             return np.empty((0, self.dimension), dtype=np.float32)
 
+        self._ensure_model()
         if self.model:
             try:
                 embeddings = self.model.encode(texts, convert_to_numpy=True, normalize_embeddings=True)

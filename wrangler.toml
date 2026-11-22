@@ -1,44 +1,8 @@
-# ============================================================
 # Cloudflare Pages — wrangler.toml
-# Used by `wrangler pages deploy` to deploy the frontend
-# static build (frontend/dist/) to Cloudflare Pages.
-#
-# Install Wrangler: npm i -g wrangler
-# Authenticate:     wrangler login
-# Deploy:           wrangler pages deploy frontend/dist --project-name aint-cappin
-# ============================================================
+# Used by `wrangler pages deploy` or Cloudflare Pages git integration.
 
 name = "aint-cappin"
-
-# Pages project — `pages_build_output_dir` tells wrangler which
-# folder to upload as the static site.
 pages_build_output_dir = "frontend/dist"
 
-# ---- Cloudflare Pages Build Settings (optional — can also be set in Dashboard) ----
-# These mirror what you'd set under Settings → Builds & deployments
-# in the Cloudflare Pages dashboard.
-
-[env.production]
-# Production environment variables for the BUILD step.
-# VITE_ variables are baked into the bundle at build time by Vite.
-# Set your real backend URL here (or in the Pages dashboard under
-# Settings → Environment variables → Production).
-# DO NOT put secrets here — use the dashboard for sensitive values.
-# [vars] below are build-time only; runtime secrets go in the dashboard.
-
-[env.production.vars]
-# Replace with your actual deployed backend URL
-# e.g., Railway, Render, Fly.io, or any server hosting the FastAPI backend
-VITE_API_BASE_URL = "https://your-backend-api.com"
-
-[env.preview]
-# Preview deployments (PRs / branches) can point to a staging backend
-[env.preview.vars]
-VITE_API_BASE_URL = "https://staging-backend-api.com"
-
-# ---- Build command (run from repo root) ----
-# Cloudflare Pages Dashboard equivalent settings:
-#   Framework preset  : None (custom)
-#   Build command     : cd frontend && npm ci && npm run build
-#   Build output dir  : frontend/dist
-#   Root directory    : /  (repo root)
+# Environment variables are loaded directly from Cloudflare Pages Dashboard
+# under Settings → Environment variables (or define VITE_API_BASE_URL here).

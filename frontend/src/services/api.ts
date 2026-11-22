@@ -6,7 +6,11 @@ import type {
   ApiError,
 } from '../types/factcheck';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Strip trailing slashes to prevent double-slash malformed URLs (e.g. https://domain.com//api/...)
+const API_BASE_URL = rawBaseUrl.replace(/\/+$/, '');
+
+console.info('[Ain\'t Cappin] Active Backend API Base URL:', API_BASE_URL);
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

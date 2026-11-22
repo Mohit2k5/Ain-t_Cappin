@@ -32,7 +32,10 @@ export const Home: React.FC = () => {
   useEffect(() => {
     checkHealth()
       .then(() => setBackendStatus('connected'))
-      .catch(() => setBackendStatus('disconnected'));
+      .catch((err) => {
+        console.error('[Ain\'t Cappin] Backend health check failed:', err);
+        setBackendStatus('disconnected');
+      });
   }, []);
 
   const handleFactCheck = async (claimText: string) => {

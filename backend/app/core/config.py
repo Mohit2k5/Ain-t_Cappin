@@ -39,6 +39,11 @@ class Settings(BaseModel):
     GROQ_API_KEY: Optional[str] = Field(default_factory=lambda: os.getenv("GROQ_API_KEY"))
     OPENAI_API_KEY: Optional[str] = Field(default_factory=lambda: os.getenv("OPENAI_API_KEY"))
 
+    # Embedding & Memory Optimization
+    USE_LIGHTWEIGHT_EMBEDDINGS: bool = Field(
+        default_factory=lambda: os.getenv("USE_LIGHTWEIGHT_EMBEDDINGS", "true").lower() in ("true", "1", "yes")
+    )
+
     # Claim Constraints
     MIN_CLAIM_LENGTH: int = 3
     MAX_CLAIM_LENGTH: int = 1000

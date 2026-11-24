@@ -14,10 +14,17 @@ class EmbeddingService:
         self._model_initialized = False
 
     def _ensure_model(self):
-        """Lazy loads SentenceTransformer on first inference call so container startup is instantaneous."""
+        """Loads SentenceTransformer only if lightweight mode is not active."""
         if self._model_initialized:
             return
         self._model_initialized = True
+
+        from app.core.config import settings
+        if settings.USE_LIGHTWEIGHT_EMBEDDINGS:
+            logger.info("Using lightweight deterministic semantic vectorizer.")
+            self.model = None
+            return
+
         try:
             from sentence_transformers import SentenceTransformer
             self.model = SentenceTransformer(self.model_name)

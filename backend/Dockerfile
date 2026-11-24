@@ -67,8 +67,8 @@ ENV SENTENCE_TRANSFORMERS_HOME=/app/.cache/sentence_transformers
 ENV HF_HUB_ENABLE_HF_TRANSFER=0
 ENV HF_HUB_OFFLINE=0
 
-# Pre-download SentenceTransformer model during Docker image build so startup is instant & offline-ready
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+# Default to lightweight RAM-optimized embeddings in production (prevents OOM on <1GB tiers)
+ENV USE_LIGHTWEIGHT_EMBEDDINGS=true
 
 # Expose the application port
 EXPOSE 8000
